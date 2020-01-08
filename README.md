@@ -27,6 +27,8 @@ plater 3 match request with a power level of 21
 
 status - displays the current database.
 
+## Documentation
 
+For moy information see MatchMaking.docx
 
 
