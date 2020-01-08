@@ -1,0 +1,2 @@
+D:\BitFry\BitMatch\obj\Debug\BitMatch.njsprojAssemblyReference.cache
+D:\BitFry\BitMatch\bin\Microsoft.NodejsTools.WebRole.dll
