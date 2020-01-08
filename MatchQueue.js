@@ -37,7 +37,7 @@ function createMatchRequest(playerID, ppl, data = null) {
 //TODO: Move this to its own file
 //the queue manager contains the array of queues that contain matches as well as the database of matches
 class MatchManager {
-    constructor(range = 5, timeoutlength = 600, rangeWidenTime = 5) {
+    constructor(range = 5, timeoutlength = 120, rangeWidenTime = 10) {
         this.queues = [];         //simple array of queueus
         this.matchDB = new db.MatchDB(); // the database containing made matches
         this.oldMatches = new db.MatchDB();  // archive of old matches just for initial testing implementation

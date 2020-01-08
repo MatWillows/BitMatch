@@ -1,0 +1,56 @@
+@startuml
+actor Player1
+title 2 Player Match Sequence
+activate Player1
+Player1->Player1: Start Matching
+
+loop every 5 sec until matched or time out (2 min)
+Player1->Server: RequestMatch (Player1)
+activate Player1
+activate Server
+Server->MatchDB: Check for Match (Player1)
+activate MatchDB
+MatchDB --> Server: No Match
+deactivate MatchDB
+Server->Server:Determine Player Queue (X)
+Server -> "Queue(X)": Get top of Queue(X)
+activate "Queue(X)"
+"Queue(X)"-->Server: Empty
+deactivate "Queue(X)"
+loop expand Search gradually \n(+/- 1 queu per 2 additionala match requests)
+Server->"Queue(X+N)": Get top of "Queue(X + N)"
+activate "Queue(X+N)"
+"Queue(X+N)" --> Server: Empty
+deactivate "Queue(X+N)"
+end
+alt player is top of Queue(X)
+Server -> "Queue(X)": Update Player 1 request time 
+activate "Queue(X)"
+"Queue(X)" -> Server: Total RequestTime
+deactivate "Queue(X)"
+alt  Queue(X) is empty
+Server -> "Queue(X)": Add PLAYER 1 to Queue(X)
+activate "Queue(X)"
+"Queue(X)" -> Server: Success
+deactivate "Queue(X)"
+end
+end
+Server->Server: Check for Time Out
+Server->Player1: No Match
+alt Time out
+Server->"Queue(X)": Remove Player1
+activate "Queue(X)"
+"Queue(X)"->Server: success
+deactivate "Queue(X)"
+Server->Player1: TimeOut
+Player1->Player1: Display Timeout
+note over Player1: End
+deactivate Server
+end
+end
+
+
+
+
+
+@enduml

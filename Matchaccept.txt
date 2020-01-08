@@ -1,0 +1,78 @@
+@startuml
+actor Player1
+actor Player2
+
+title 2 Player Match Sequence
+activate Player1
+Note over Player1: In Matching loop
+
+
+Player2 -> Player2: Start Matching
+Activate Player2
+Player2->Server: RequestMatch (Player2)
+activate Server
+Server -> MatchDB: Check for Match
+activate MatchDB
+MatchDB->Server: No Match
+deactivate MatchDB
+Server->Server:Determine Player Queue X
+Server -> "Queue(X)": Get Top of Queue
+activate "Queue(X)"
+"Queue(X)" --> Server: return Player1
+deactivate "Queue(X)"
+Server -> "Queue(X)": Remove Player1
+activate "Queue(X)"
+"Queue(X)"--> Server: Success
+deactivate "Queue(X)"
+Server -> Server : Create Match Ticket(Player1.Info, Player2.Info)
+Server -> MatchDB : Save Match
+activate MatchDB 
+MatchDB -->Server: Success(MatchID)
+deactivate MatchDB 
+Server-->Player2: MatchFound(MatchID)
+deactivate Server
+Player2 -> Player2: Ready to Play?
+loop Accept Match\npoll server with acceptance ever n seconds
+Player2 -> Server: MatchAccepted(MatchID)
+activate Server
+Server->MatchDB: Get Match (MatchID)
+activate MatchDB
+MatchDB-->Server: Match(MatchID)
+deactivate MatchDB
+Server->Server: Check for completion
+
+alt Waiting on Player 1
+group Update Match Player2 Accepted
+Server->MatchDB: Player2 Accepted (MatchID)
+activate MatchDB
+MatchDB-->Server: Match(MatchID)
+deactivate MatchDB
+end
+Server-->Player2: Waiting for Player1
+deactivate Server
+deactivate Player2
+else Player 1 has accepted
+
+Server->MatchDB: Update Match / Archive
+activate Server
+activate MatchDB
+MatchDB-->Server: Success
+deactivate MatchDB
+Server-> Server: Add connection info to Match Info
+Server-> Player2: MatchAccepted (Match Info)
+deactivate Server
+Player2 -> Player1: Connection (Match Info)
+group P2P magic
+Player1 -> Player2: connect
+end
+end
+end
+note over Player1, Player2: Start match
+deactivate Player1
+deactivate Player2
+
+
+
+
+
+@enduml
