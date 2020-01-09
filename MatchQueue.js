@@ -89,6 +89,7 @@ class MatchManager {
 
             //if both players accept the match, remove it from the mainDB, and archive it
             if (theMatch.data.player2Request.accepted && theMatch.data.player1Request.accepted) {
+                theMatch.data.status = "bothaccepted";
                 this.matchDB.RemoveMatch(id);
                 this.oldMatches.Append(theMatch);
             }

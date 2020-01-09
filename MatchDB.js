@@ -5,6 +5,7 @@
 class MatchNode {
     constructor(p1, p2) {
         this.data = {};
+        this.data.status = "matched"
         this.data.player1Request = p1;
         this.data.player2Request = p2;
         this.next = null;
